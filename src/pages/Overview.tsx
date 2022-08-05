@@ -1,8 +1,10 @@
+import { ImagePage, ImagePageSection } from "./Main";
+
 const Overview = () => {
   return (
-    <div className="flex justify-center items-denter h-screen">
-      <img src="/renewal.svg" alt="" className="w-1/3" />
-    </div>
+    <ImagePageSection>
+      <ImagePage src="/renewal.svg" alt="" />
+    </ImagePageSection>
   );
 };
 

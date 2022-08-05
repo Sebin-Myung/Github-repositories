@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import category from "../config/category";
+import { PageWrapper } from "../pages/Main";
 
 const Header = () => {
   const pathname = useLocation().pathname;
 
   return (
     <header className="bg-gray-100 border-b">
-      <div className="px-5 pt-4 w-full max-w-[1024px] mx-auto">
+      <PageWrapper className="pt-4 pb-0">
         <div className="flex items-center w-fit">
           <Link to="/">
             <img
@@ -23,7 +24,9 @@ const Header = () => {
           {category.map((item) => (
             <span
               key={item}
-              className={`p-2 pb-4 ${pathname.includes(item) && "border-b-2 border-amber-500 font-semibold"}`}
+              className={`p-2 pb-4 ${
+                pathname.split("/").includes(item) && "border-b-2 border-amber-500 font-semibold"
+              }`}
             >
               <Link to={item} key={item}>
                 {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -31,7 +34,7 @@ const Header = () => {
             </span>
           ))}
         </div>
-      </div>
+      </PageWrapper>
     </header>
   );
 };

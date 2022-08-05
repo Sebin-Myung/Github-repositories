@@ -1,8 +1,10 @@
+import { PageSection, PageWrapper } from "./Main";
+
 const Repositories = () => {
   return (
-    <div>
-      <p>레포지토리</p>
-    </div>
+    <PageSection>
+      <PageWrapper>레포지토리</PageWrapper>
+    </PageSection>
   );
 };
 
