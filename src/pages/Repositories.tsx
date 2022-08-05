@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "../components/Dropdown";
+import ListWrapper from "../components/ListWrapper";
 import { LanguageFilter, RadioFilter, SortFilter } from "../config/radioFilter";
+import { useAppDispatch, useAppSelector } from "../store/config";
+import { fetchGithubApi } from "../store/slices/fetchGithubApiSlice";
 import { PageSection, PageWrapper } from "./Main";
 
 const language: { [name: string]: LanguageFilter } = {
@@ -13,6 +17,12 @@ const language: { [name: string]: LanguageFilter } = {
 const sort: { [name: string]: SortFilter } = { "Last updated": "updated", Name: "full_name" };
 
 const Repositories = () => {
+  const PER_PAGE = 10;
+  const TOTAL_PAGE = 4;
+  const [page, setPage] = useState<number>(1);
+  const { repos, loading } = useAppSelector((state) => state.githubApi);
+  const dispatch = useAppDispatch();
+
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
@@ -21,6 +31,17 @@ const Repositories = () => {
     urlParams.set(params, val);
     navigate("/repositories?" + urlParams);
   };
+
+  useEffect(() => {
+    dispatch(
+      fetchGithubApi({
+        language: urlParams.get("language"),
+        sort: urlParams.get("sort"),
+        per_page: PER_PAGE,
+        page: page,
+      }),
+    );
+  }, [location.search]);
 
   return (
     <PageSection>
@@ -46,6 +67,7 @@ const Repositories = () => {
             }}
           />
         </fieldset>
+        {loading === "succeeded" && <ListWrapper datas={repos} />}
       </PageWrapper>
     </PageSection>
   );

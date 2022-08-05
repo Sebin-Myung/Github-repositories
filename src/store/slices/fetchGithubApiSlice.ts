@@ -4,15 +4,15 @@ import { ListItemProps } from "../../components/ListItem";
 interface fetchGithubApiProps {
   language: string | null;
   sort: string | null;
+  per_page: number;
   page: number;
 }
 
 export const fetchGithubApi = createAsyncThunk(
   "githubApi/fetchGithubApiSlice",
-  async ({ language, sort, page }: fetchGithubApiProps) => {
+  async ({ language, sort, per_page, page }: fetchGithubApiProps) => {
     const facebookUrl = "https://api.github.com/orgs/facebook";
-    const PER_PAGE = 10;
-    const res = await fetch(`${facebookUrl}/repos?sort=${sort}&per_page=${PER_PAGE}&page=${page}`);
+    const res = await fetch(`${facebookUrl}/repos?sort=${sort}&per_page=${per_page}&page=${page}`);
     const result: GithubApi[] = await res.json();
 
     if (language) {

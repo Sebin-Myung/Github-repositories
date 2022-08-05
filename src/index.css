@@ -17,3 +17,7 @@ code {
 li {
   list-style: none;
 }
+
+.list-wrapper li + li {
+  border-top-width: 1px;
+}
