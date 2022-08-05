@@ -21,7 +21,7 @@ const Header = () => {
             />
           </Link>
           <Link to="/" className="ml-2">
-            <p className="text-3xl font-semibold">Meta</p>
+            <h1 className="text-3xl font-semibold">Meta</h1>
           </Link>
         </div>
         <div className="flex mt-2">
@@ -33,7 +33,7 @@ const Header = () => {
               }`}
             >
               <Link to={item} key={item}>
-                {firstCharUpperCase(item)}
+                <h2>{firstCharUpperCase(item)}</h2>
               </Link>
             </span>
           ))}

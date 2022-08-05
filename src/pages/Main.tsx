@@ -4,7 +4,7 @@ const Main = () => {
   return (
     <ImagePageSection>
       <ImagePage src="/github.svg" alt="" />
-      <h1 className="text-4xl font-bold">Meta Github</h1>
+      <h3 className="text-4xl font-bold">Meta Github</h3>
     </ImagePageSection>
   );
 };
