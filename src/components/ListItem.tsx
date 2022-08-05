@@ -3,7 +3,7 @@ import languageColor from "../config/languageColor";
 import { firstCharUpperCase } from "./Header";
 import { AiOutlineStar } from "react-icons/ai";
 
-interface ListItemProps {
+export interface ListItemProps {
   name: string;
   visibility: string;
   description: string | null;
@@ -82,7 +82,7 @@ const ListItem = ({ data }: { data: ListItemProps }) => {
         {data.stargazers_count > 0 && (
           <div className="flex items-center">
             <AiOutlineStar />
-            <span>{data.stargazers_count}</span>
+            <span>{data.stargazers_count.toLocaleString()}</span>
           </div>
         )}
         {data?.updated_at && <span>{getUpdatedAt(data.updated_at)}</span>}
