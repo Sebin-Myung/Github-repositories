@@ -2,6 +2,10 @@ import { Link, useLocation } from "react-router-dom";
 import category from "../config/category";
 import { PageWrapper } from "../pages/Main";
 
+export const firstCharUpperCase = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const Header = () => {
   const pathname = useLocation().pathname;
 
@@ -29,7 +33,7 @@ const Header = () => {
               }`}
             >
               <Link to={item} key={item}>
-                {item.charAt(0).toUpperCase() + item.slice(1)}
+                {firstCharUpperCase(item)}
               </Link>
             </span>
           ))}
