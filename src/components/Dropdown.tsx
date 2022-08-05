@@ -4,7 +4,7 @@ import DetailsMenu from "./DetailsMenu";
 import { RadioFilter } from "../config/radioFilter";
 
 interface DropdownProps {
-  checkedValue: string;
+  checkedValue: string | null;
   name: keyof RadioFilter;
   title: string;
   options: { [name: string]: string };

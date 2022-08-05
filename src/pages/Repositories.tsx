@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Dropdown from "../components/Dropdown";
 import { LanguageFilter, RadioFilter, SortFilter } from "../config/radioFilter";
 import { PageSection, PageWrapper } from "./Main";
@@ -12,38 +12,15 @@ const language: { [name: string]: LanguageFilter } = {
 
 const sort: { [name: string]: SortFilter } = { "Last updated": "updated", Name: "full_name" };
 
-const initialFilter: RadioFilter = {
-  language: "",
-  sort: "",
-};
-
 const Repositories = () => {
-  const localCheckedFilter = localStorage.getItem("checkedFilter");
-  const [checkedFilter, setCheckedFilter] = useState<RadioFilter>(
-    localCheckedFilter ? JSON.parse(localCheckedFilter) : initialFilter,
-  );
+  const location = useLocation();
+  const navigate = useNavigate();
+  const urlParams = new URLSearchParams(location.search);
 
-  const onRadioClick = (name: keyof RadioFilter, value: string) => {
-    setCheckedFilter(() => {
-      return { ...checkedFilter, [name]: value };
-    });
+  const onRadioClick = (params: keyof RadioFilter, val: string) => {
+    urlParams.set(params, val);
+    navigate("/repositories?" + urlParams);
   };
-
-  useEffect(() => {
-    localStorage.setItem("checkedFilter", JSON.stringify(checkedFilter));
-  }, [checkedFilter]);
-
-  useEffect(() => {
-    return () => {
-      localStorage.setItem(
-        `checkedFilter`,
-        JSON.stringify({
-          language: "",
-          sort: "",
-        }),
-      );
-    };
-  }, []);
 
   return (
     <PageSection>
@@ -51,18 +28,22 @@ const Repositories = () => {
         <fieldset className="flex gap-4">
           <input type="text" placeholder="Find a repository..." className="border rounded-md px-3 py-1 text-sm" />
           <Dropdown
-            checkedValue={checkedFilter.language}
+            checkedValue={urlParams.get("language")}
             name={"language"}
             title={"language"}
             options={language}
-            onRadioClick={(val: LanguageFilter) => onRadioClick("language", val)}
+            onRadioClick={(val: LanguageFilter) => {
+              onRadioClick("language", val);
+            }}
           />
           <Dropdown
-            checkedValue={checkedFilter.sort}
+            checkedValue={urlParams.get("sort")}
             name={"sort"}
             title={"order"}
             options={sort}
-            onRadioClick={(val: SortFilter) => onRadioClick("sort", val)}
+            onRadioClick={(val: SortFilter) => {
+              onRadioClick("sort", val);
+            }}
           />
         </fieldset>
       </PageWrapper>
