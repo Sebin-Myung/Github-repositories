@@ -62,7 +62,7 @@ const ListItem = ({ data }: { data: ListItemProps }) => {
         <Tag className="ml-2">{firstCharUpperCase(data.visibility)}</Tag>
       </div>
       <p>{data.description}</p>
-      <div className="flex items-center gap-1 my-2">
+      <div className="flex flex-wrap items-center gap-1 my-2">
         {data.topics.map((topic) => (
           <Tag key={topic} className="text-blue-500 bg-sky-100">
             {topic}
