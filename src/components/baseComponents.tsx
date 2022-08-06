@@ -2,6 +2,7 @@ import tw from "tailwind-styled-components";
 
 export const ImagePageSection = tw.section`
 w-full
+min-w-[512px]
 min-h-screen
 flex
 flex-col
@@ -10,7 +11,7 @@ items-center
 `;
 
 export const ImagePage = tw.img`
-w-1/4
+w-80
 `;
 
 export const PageSection = tw.section`
