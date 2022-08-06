@@ -47,6 +47,10 @@ const Repositories = () => {
   };
 
   useEffect(() => {
+    document.title = "Repositories - Meta";
+  }, []);
+
+  useEffect(() => {
     dispatch(
       fetchGithubApi({
         q: urlParams.get("q"),

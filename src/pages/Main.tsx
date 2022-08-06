@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import { ImagePage, ImagePageSection } from "../components/baseComponents";
 
 const Main = () => {
+  useEffect(() => {
+    document.title = "Githyb - Meta";
+  }, []);
+
   return (
     <ImagePageSection>
       <ImagePage src="/github.svg" alt="" />
