@@ -11,8 +11,10 @@ const SearchInput = ({ placeholder, url, urlParams }: SearchInputProps) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  let debounce: ReturnType<typeof setTimeout>;
   const onChange = () => {
-    setTimeout(() => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
       urlParams.set("q", searchInputRef.current?.value || "");
       navigate(url + "?" + urlParams);
     }, 500);
