@@ -15,14 +15,18 @@ export const fetchGithubApi = createAsyncThunk(
   async ({ q, language, sort, per_page, total_page, page }: fetchGithubApiProps) => {
     const facebookUrl = "https://api.github.com/orgs/facebook/repos";
     if ((language === null || language === "") && (q === null || q === "")) {
-      const res = await fetch(`${facebookUrl}?sort=${sort}&per_page=${per_page}&page=${page}`);
+      const res = await fetch(`${facebookUrl}?sort=${sort || "updated"}&per_page=${per_page}&page=${page}`);
       const result: GithubApi[] = await res.json();
       return { repos: result, totalRepoCount: null };
     } else {
-      const res = await fetch(`${facebookUrl}?per_page=${per_page * total_page <= 100 ? per_page * total_page : 100}`);
+      const res = await fetch(
+        `${facebookUrl}?sort=updated&per_page=${per_page * total_page <= 100 ? per_page * total_page : 100}`,
+      );
       let result: GithubApi[] = await res.json();
+
       if (language && language !== "") result = result.filter((data) => data.language === language);
       if (q && q !== "") result = result.filter((data) => data.name.includes(q));
+
       switch (sort) {
         case "updated":
           result.sort((a, b) => {
@@ -40,6 +44,7 @@ export const fetchGithubApi = createAsyncThunk(
           });
           break;
       }
+
       const [firstIndex, lastIndex] = [per_page * (page - 1), per_page * page - 1];
       if (lastIndex < result.length)
         return { repos: result.slice(firstIndex, lastIndex + 1), totalRepoCount: result.length };

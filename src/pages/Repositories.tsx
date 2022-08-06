@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { VscChevronLeft, VscChevronRight } from "react-icons/vsc";
+import { BsFillXSquareFill } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
 import { PageSection, PageWrapper } from "../components/baseComponents";
@@ -32,6 +33,41 @@ const Repositories = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
+
+  const getObjectKey = (object: { [name: string]: string }, value: string) => {
+    const keys = Object.keys(object);
+    for (let i = 0; i < keys.length; i++) {
+      if (object[keys[i]] === value) return keys[i];
+    }
+    return "";
+  };
+
+  const getFilterResult = (q: string | null, langFilter: string | null, sortFilter: string | null): JSX.Element => {
+    return (
+      <p>
+        <BoldSpan>{totalRepoCount}</BoldSpan> results for <BoldSpan>all</BoldSpan> repositories{" "}
+        {q && q !== "" && (
+          <>
+            matching <BoldSpan>{q}</BoldSpan>
+          </>
+        )}
+        {langFilter && langFilter !== "" && (
+          <>
+            {" "}
+            written in <BoldSpan>{getObjectKey(language, langFilter || "")}</BoldSpan>
+          </>
+        )}{" "}
+        sotred by <BoldSpan>{getObjectKey(sort, sortFilter || "updated")}</BoldSpan>
+      </p>
+    );
+  };
+
+  const clearFilter = () => {
+    urlParams.delete("q");
+    urlParams.delete("language");
+    urlParams.delete("sort");
+    navigate("/repositories?" + urlParams);
+  };
 
   const onRadioClick = (params: keyof RadioFilter, val: string) => {
     setPage(() => 1);
@@ -69,7 +105,7 @@ const Repositories = () => {
         <fieldset className="flex gap-4">
           <SearchInput placeholder="Find a repository..." url="/repositories" urlParams={urlParams} />
           <Dropdown
-            checkedValue={urlParams.get("language")}
+            checkedValue={urlParams.get("language") || ""}
             name={"language"}
             title={"language"}
             options={language}
@@ -78,7 +114,7 @@ const Repositories = () => {
             }}
           />
           <Dropdown
-            checkedValue={urlParams.get("sort")}
+            checkedValue={urlParams.get("sort") || "updated"}
             name={"sort"}
             title={"order"}
             options={sort}
@@ -89,6 +125,15 @@ const Repositories = () => {
         </fieldset>
         {loading === "succeeded" && (
           <>
+            {totalRepoCount && (
+              <div className="flex justify-between items-center flex-wrap gap-2 my-2 text-sm">
+                {getFilterResult(urlParams.get("q"), urlParams.get("language"), urlParams.get("sort"))}
+                <div className="flex items-center gap-2 text-gray-500 cursor-pointer" onClick={clearFilter}>
+                  <BsFillXSquareFill />
+                  <p>Clear Filter</p>
+                </div>
+              </div>
+            )}
             <ListWrapper datas={repos} />
             {TOTAL_PAGE < 2 || (
               <div className="flex justify-center items-center gap-1 m-4">
@@ -129,6 +174,10 @@ const Repositories = () => {
     </PageSection>
   );
 };
+
+const BoldSpan = tw.span`
+font-bold
+`;
 
 const PaginationButton = tw.span`
 h-9
