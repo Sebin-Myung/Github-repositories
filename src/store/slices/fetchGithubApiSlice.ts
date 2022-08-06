@@ -5,7 +5,7 @@ interface fetchGithubApiProps {
   language: string | null;
   sort: string | null;
   per_page: number;
-  page: number;
+  page: string | null;
 }
 
 export const fetchGithubApi = createAsyncThunk(
