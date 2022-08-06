@@ -78,6 +78,7 @@ const Repositories = () => {
 
   const onPageButtonClick = (page: number) => {
     setPage(() => page);
+    window.scrollTo(0, 0);
     urlParams.set("page", page.toString());
     navigate("/repositories?" + urlParams);
   };
@@ -125,7 +126,7 @@ const Repositories = () => {
         </fieldset>
         {loading === "succeeded" && (
           <>
-            {totalRepoCount && (
+            {totalRepoCount !== null && (
               <div className="flex justify-between items-center flex-wrap gap-2 my-2 text-sm">
                 {getFilterResult(urlParams.get("q"), urlParams.get("language"), urlParams.get("sort"))}
                 <div className="flex items-center gap-2 text-gray-500 cursor-pointer" onClick={clearFilter}>
@@ -134,39 +135,47 @@ const Repositories = () => {
                 </div>
               </div>
             )}
-            <ListWrapper datas={repos} />
-            {TOTAL_PAGE < 2 || (
-              <div className="flex justify-center items-center gap-1 m-4">
-                <PaginationButton
-                  className={`${page === 1 ? "text-gray-500 cursor-default hover:border-0" : ""}`}
-                  onClick={() => page === 1 || onPageButtonClick(page - 1)}
-                >
-                  <VscChevronLeft />
-                  <p className="ml-2">Previous</p>
-                </PaginationButton>
-                {Array.from(
-                  { length: PAGE_GROUP },
-                  (_, i) => i + 1 + PAGE_GROUP * Math.floor((page - 1) / PAGE_GROUP),
-                ).map(
-                  (p) =>
-                    p <= TOTAL_PAGE && (
-                      <PaginationButton
-                        key={p}
-                        className={`w-9 ${p === page ? "bg-blue-600 text-white hover:border-0" : ""}`}
-                        onClick={() => onPageButtonClick(p)}
-                      >
-                        {p}
-                      </PaginationButton>
-                    ),
-                )}
-                <PaginationButton
-                  className={`${page === TOTAL_PAGE ? "text-gray-500 cursor-default hover:border-0" : ""}`}
-                  onClick={page === TOTAL_PAGE || (() => onPageButtonClick(page + 1))}
-                >
-                  <p className="mr-2">Next</p>
-                  <VscChevronRight />
-                </PaginationButton>
+            {totalRepoCount === 0 ? (
+              <div className="flex justify-center items-center min-h-[50vh] text-2xl font-bold">
+                This organization doesn’t have any repositories that match.
               </div>
+            ) : (
+              TOTAL_PAGE < 2 || (
+                <>
+                  <ListWrapper datas={repos} />
+                  <div className="flex justify-center items-center gap-1 m-4">
+                    <PaginationButton
+                      className={`${page === 1 ? "text-gray-500 cursor-default hover:border-0" : ""}`}
+                      onClick={() => page === 1 || onPageButtonClick(page - 1)}
+                    >
+                      <VscChevronLeft />
+                      <p className="ml-2">Previous</p>
+                    </PaginationButton>
+                    {Array.from(
+                      { length: PAGE_GROUP },
+                      (_, i) => i + 1 + PAGE_GROUP * Math.floor((page - 1) / PAGE_GROUP),
+                    ).map(
+                      (p) =>
+                        p <= TOTAL_PAGE && (
+                          <PaginationButton
+                            key={p}
+                            className={`w-9 ${p === page ? "bg-blue-600 text-white hover:border-0" : ""}`}
+                            onClick={() => onPageButtonClick(p)}
+                          >
+                            {p}
+                          </PaginationButton>
+                        ),
+                    )}
+                    <PaginationButton
+                      className={`${page === TOTAL_PAGE ? "text-gray-500 cursor-default hover:border-0" : ""}`}
+                      onClick={page === TOTAL_PAGE || (() => onPageButtonClick(page + 1))}
+                    >
+                      <p className="mr-2">Next</p>
+                      <VscChevronRight />
+                    </PaginationButton>
+                  </div>
+                </>
+              )
             )}
           </>
         )}
