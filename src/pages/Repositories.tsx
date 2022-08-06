@@ -5,6 +5,7 @@ import tw from "tailwind-styled-components";
 import { PageSection, PageWrapper } from "../components/baseComponents";
 import Dropdown from "../components/Dropdown";
 import ListWrapper from "../components/ListWrapper";
+import SearchInput from "../components/SearchInput";
 import { LanguageFilter, RadioFilter, SortFilter } from "../config/radioFilter";
 import { useAppDispatch, useAppSelector } from "../store/config";
 import { fetchGithubApi } from "../store/slices/fetchGithubApiSlice";
@@ -48,6 +49,7 @@ const Repositories = () => {
   useEffect(() => {
     dispatch(
       fetchGithubApi({
+        q: urlParams.get("q"),
         language: urlParams.get("language"),
         sort: urlParams.get("sort"),
         per_page: PER_PAGE,
@@ -61,7 +63,7 @@ const Repositories = () => {
     <PageSection>
       <PageWrapper>
         <fieldset className="flex gap-4">
-          <input type="text" placeholder="Find a repository..." className="border rounded-md px-3 py-1 text-sm" />
+          <SearchInput placeholder="Find a repository..." url="/repositories" urlParams={urlParams} />
           <Dropdown
             checkedValue={urlParams.get("language")}
             name={"language"}

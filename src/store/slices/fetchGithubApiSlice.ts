@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction, Slice } from "@reduxjs/to
 import { ListItemProps } from "../../components/ListItem";
 
 interface fetchGithubApiProps {
+  q: string | null;
   language: string | null;
   sort: string | null;
   per_page: number;
@@ -11,19 +12,20 @@ interface fetchGithubApiProps {
 
 export const fetchGithubApi = createAsyncThunk(
   "githubApi/fetchGithubApiSlice",
-  async ({ language, sort, per_page, total_page, page }: fetchGithubApiProps) => {
+  async ({ q, language, sort, per_page, total_page, page }: fetchGithubApiProps) => {
     const facebookUrl = "https://api.github.com/orgs/facebook/repos";
-    if (language === null || language === "") {
+    if ((language === null || language === "") && (q === null || q === "")) {
       const res = await fetch(`${facebookUrl}?sort=${sort}&per_page=${per_page}&page=${page}`);
       const result: GithubApi[] = await res.json();
       return { repos: result, totalRepoCount: null };
     } else {
       const res = await fetch(`${facebookUrl}?per_page=${per_page * total_page <= 100 ? per_page * total_page : 100}`);
-      const result: GithubApi[] = await res.json();
-      const filterLanguage = result.filter((data) => data.language === language);
+      let result: GithubApi[] = await res.json();
+      if (language && language !== "") result = result.filter((data) => data.language === language);
+      if (q && q !== "") result = result.filter((data) => data.name.includes(q));
       switch (sort) {
         case "updated":
-          filterLanguage.sort((a, b) => {
+          result.sort((a, b) => {
             const [sortA, sortB] = [a.updated_at || "", b.updated_at || ""];
             if (sortA > sortB) return -1;
             else if (sortB > sortA) return 1;
@@ -31,7 +33,7 @@ export const fetchGithubApi = createAsyncThunk(
           });
           break;
         case "full_name":
-          filterLanguage.sort((a, b) => {
+          result.sort((a, b) => {
             if (a.name > b.name) return 1;
             else if (b.name > a.name) return -1;
             else return 0;
@@ -39,9 +41,9 @@ export const fetchGithubApi = createAsyncThunk(
           break;
       }
       const [firstIndex, lastIndex] = [per_page * (page - 1), per_page * page - 1];
-      if (lastIndex < filterLanguage.length)
-        return { repos: filterLanguage.slice(firstIndex, lastIndex + 1), totalRepoCount: filterLanguage.length };
-      else return { repos: filterLanguage.slice(firstIndex), totalRepoCount: filterLanguage.length };
+      if (lastIndex < result.length)
+        return { repos: result.slice(firstIndex, lastIndex + 1), totalRepoCount: result.length };
+      else return { repos: result.slice(firstIndex), totalRepoCount: result.length };
     }
   },
 );
