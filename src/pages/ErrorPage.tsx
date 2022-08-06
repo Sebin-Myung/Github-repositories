@@ -1,4 +1,4 @@
-import { ImagePage, ImagePageSection } from "./Main";
+import { ImagePage, ImagePageSection } from "../components/baseComponents";
 
 const ErrorPage = () => {
   return (

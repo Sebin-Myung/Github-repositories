@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import category from "../config/category";
-import { PageWrapper } from "../pages/Main";
+import { PageWrapper } from "./baseComponents";
 
 export const firstCharUpperCase = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -10,7 +10,7 @@ const Header = () => {
   const pathname = useLocation().pathname;
 
   return (
-    <header className="bg-gray-100 border-b">
+    <header className="min-w-[512px] bg-gray-100 border-b">
       <PageWrapper className="pt-4 pb-0">
         <div className="flex items-center w-fit">
           <Link to="/">

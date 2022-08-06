@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { PageSection, PageWrapper } from "../components/baseComponents";
 import Dropdown from "../components/Dropdown";
 import ListWrapper from "../components/ListWrapper";
 import { LanguageFilter, RadioFilter, SortFilter } from "../config/radioFilter";
 import { useAppDispatch, useAppSelector } from "../store/config";
 import { fetchGithubApi } from "../store/slices/fetchGithubApiSlice";
-import { PageSection, PageWrapper } from "./Main";
 
 const language: { [name: string]: LanguageFilter } = {
   "C++": "C++",
