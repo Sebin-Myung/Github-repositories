@@ -19,7 +19,7 @@ const Dropdown = ({ checkedValue, name, title, options, onRadioClick }: Dropdown
         <VscTriangleDown size={10} className="fill-gray-600" />
       </summary>
       <DetailsMenu role="menu">
-        <div className="absolute right-0 w-52 m-2 text-xs flex flex-col border rounded-md bg-gray-100">
+        <div className="absolute filter:right-0 w-52 m-2 text-xs flex flex-col border rounded-md bg-gray-100">
           <header className="pl-4 pr-2 py-1 flex justify-between items-center">
             <p className="font-semibold">select {title}</p>
             <VscClose

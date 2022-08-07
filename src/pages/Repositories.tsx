@@ -127,26 +127,28 @@ const Repositories = () => {
   return (
     <PageSection>
       <PageWrapper>
-        <fieldset className="flex gap-4">
+        <fieldset className="flex flex-col filter:flex-row gap-x-4 gap-y-2">
           <SearchInput placeholder="Find a repository..." url="/repositories" urlParams={urlParams} />
-          <Dropdown
-            checkedValue={urlParams.get("language") || ""}
-            name={"language"}
-            title={"language"}
-            options={language}
-            onRadioClick={(val: LanguageFilter) => {
-              onRadioClick("language", val);
-            }}
-          />
-          <Dropdown
-            checkedValue={urlParams.get("sort") || "updated"}
-            name={"sort"}
-            title={"order"}
-            options={sort}
-            onRadioClick={(val: SortFilter) => {
-              onRadioClick("sort", val);
-            }}
-          />
+          <div className="flex gap-4">
+            <Dropdown
+              checkedValue={urlParams.get("language") || ""}
+              name={"language"}
+              title={"language"}
+              options={language}
+              onRadioClick={(val: LanguageFilter) => {
+                onRadioClick("language", val);
+              }}
+            />
+            <Dropdown
+              checkedValue={urlParams.get("sort") || "updated"}
+              name={"sort"}
+              title={"order"}
+              options={sort}
+              onRadioClick={(val: SortFilter) => {
+                onRadioClick("sort", val);
+              }}
+            />
+          </div>
         </fieldset>
         {loading === "succeeded" && (
           <>
@@ -181,9 +183,9 @@ const Repositories = () => {
               <>
                 <ListWrapper datas={repos} topicClickFunction={(topic: string) => addSelectedTopic(topic)} />
                 {TOTAL_PAGE < 2 || (
-                  <div className="flex justify-center items-center gap-1 m-4">
+                  <div className="flex flex-wrap justify-center items-center gap-1 my-4">
                     <PaginationButton
-                      className={`${page === 1 ? "text-gray-500 cursor-default hover:border-0" : ""}`}
+                      className={`${page === 1 ? "text-gray-500 cursor-auto hover:border-0" : ""}`}
                       onClick={() => page === 1 || onPageButtonClick(page - 1)}
                     >
                       <VscChevronLeft />
@@ -197,7 +199,7 @@ const Repositories = () => {
                         p <= TOTAL_PAGE && (
                           <PaginationButton
                             key={p}
-                            className={`w-9 ${p === page ? "bg-blue-600 text-white hover:border-0" : ""}`}
+                            className={`${p === page ? "bg-blue-600 text-white hover:border-0" : ""}`}
                             onClick={() => onPageButtonClick(p)}
                           >
                             {p}
@@ -205,7 +207,7 @@ const Repositories = () => {
                         ),
                     )}
                     <PaginationButton
-                      className={`${page === TOTAL_PAGE ? "text-gray-500 cursor-default hover:border-0" : ""}`}
+                      className={`${page === TOTAL_PAGE ? "text-gray-500 cursor-auto hover:border-0" : ""}`}
                       onClick={() => page === TOTAL_PAGE || onPageButtonClick(page + 1)}
                     >
                       <p className="mr-2">Next</p>
@@ -227,10 +229,15 @@ font-bold
 `;
 
 const PaginationButton = tw.span`
-h-9
+min-w-[32px]
+h-8
+text-sm
+xs:min-w-[36px]
+xs:h-9
 py-[5px]
 px-2.5
-flex 
+flex
+shrink-0
 justify-center
 items-center
 cursor-pointer

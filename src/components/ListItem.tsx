@@ -71,7 +71,7 @@ const ListItem = ({ data, topicClickFunction }: { data: ListItemProps; topicClic
           </Tag>
         ))}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
         {data?.language && (
           <div className="flex items-center">
             <span
