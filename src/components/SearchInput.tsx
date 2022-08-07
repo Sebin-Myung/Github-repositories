@@ -16,6 +16,7 @@ const SearchInput = ({ placeholder, url, urlParams }: SearchInputProps) => {
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       urlParams.set("q", searchInputRef.current?.value || "");
+      urlParams.delete("page");
       navigate(url + "?" + urlParams);
     }, 500);
   };

@@ -71,10 +71,22 @@ const Repositories = () => {
     navigate("/repositories?" + urlParams);
   };
 
+  const addSelectedTopic = (topic: string) => {
+    if (selectedTopics.includes(topic)) return;
+    const result = [...selectedTopics, topic];
+    setSelectedTopics(() => result);
+    urlParams.set("topics", result.length > 1 ? result.join("_") : result[0]);
+    urlParams.delete("page");
+    navigate("/repositories?" + urlParams);
+  };
+
   const deleteSelectedTopic = (index: number) => {
     const result = [...selectedTopics];
     result.splice(index, 1);
-    setSelectedTopics(result);
+    setSelectedTopics(() => result);
+    if (selectedTopics.length === 0) urlParams.delete("topics");
+    else urlParams.set("topics", result.length > 1 ? result.join("_") : result[0]);
+    navigate("/repositories?" + urlParams);
   };
 
   const onRadioClick = (params: keyof RadioFilter, val: string) => {
@@ -93,6 +105,9 @@ const Repositories = () => {
 
   useEffect(() => {
     document.title = "Repositories - Meta";
+    setSelectedTopics(urlParams.get("topics")?.split("_") || []);
+    const urlPage = urlParams.get("page");
+    setPage(urlPage ? parseInt(urlPage) : 1);
   }, []);
 
   useEffect(() => {
@@ -164,10 +179,7 @@ const Repositories = () => {
               </div>
             ) : (
               <>
-                <ListWrapper
-                  datas={repos}
-                  topicClickFunction={(topic: string) => setSelectedTopics([...selectedTopics, topic])}
-                />
+                <ListWrapper datas={repos} topicClickFunction={(topic: string) => addSelectedTopic(topic)} />
                 {TOTAL_PAGE < 2 || (
                   <div className="flex justify-center items-center gap-1 m-4">
                     <PaginationButton
