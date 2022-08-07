@@ -21,3 +21,7 @@ li {
 .list-wrapper li + li {
   border-top-width: 1px;
 }
+
+details summary::-webkit-details-marker {
+  display: none;
+}
