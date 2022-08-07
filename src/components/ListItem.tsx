@@ -13,7 +13,7 @@ export interface ListItemProps {
   updated_at: string | null;
 }
 
-const ListItem = ({ data }: { data: ListItemProps }) => {
+const ListItem = ({ data, topicClickFunction }: { data: ListItemProps; topicClickFunction: Function }) => {
   const getUpdatedAt = (time: string) => {
     const currentTime = Date.now();
     const updatedTime = Date.parse(time);
@@ -59,12 +59,14 @@ const ListItem = ({ data }: { data: ListItemProps }) => {
     <li className="p-4 text-gray-600 text-sm">
       <div className="flex items-center">
         <h3 className="text-blue-500 text-lg font-bold cursor-pointer hover:underline">{data.name}</h3>
-        <Tag className="ml-2">{firstCharUpperCase(data.visibility)}</Tag>
+        <Tag className="ml-2 py-0 text-gray-600 bg-white cursor-auto hover:bg-white hover:text-gray-600">
+          {firstCharUpperCase(data.visibility)}
+        </Tag>
       </div>
       <p>{data.description}</p>
       <div className="flex flex-wrap items-center gap-1 my-2">
         {data.topics.map((topic) => (
-          <Tag key={topic} className="text-blue-500 bg-sky-100">
+          <Tag key={topic} onClick={() => topicClickFunction(topic)}>
             {topic}
           </Tag>
         ))}
@@ -91,12 +93,18 @@ const ListItem = ({ data }: { data: ListItemProps }) => {
   );
 };
 
-const Tag = tw.span`
+export const Tag = tw.span`
 text-xs
 font-semibold
 px-2
+py-1
 border
 rounded-full
+text-blue-500
+bg-sky-100
+cursor-pointer
+hover:bg-blue-500
+hover:text-white
 `;
 
 export default ListItem;

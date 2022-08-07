@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { VscChevronLeft, VscChevronRight } from "react-icons/vsc";
+import { VscChevronLeft, VscChevronRight, VscClose } from "react-icons/vsc";
 import { BsFillXSquareFill } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 import tw from "tailwind-styled-components";
@@ -10,6 +10,7 @@ import SearchInput from "../components/SearchInput";
 import { LanguageFilter, RadioFilter, SortFilter } from "../config/radioFilter";
 import { useAppDispatch, useAppSelector } from "../store/config";
 import { fetchGithubApi } from "../store/slices/fetchGithubApiSlice";
+import { Tag } from "../components/ListItem";
 
 const language: { [name: string]: LanguageFilter | "" } = {
   All: "",
@@ -23,6 +24,7 @@ const sort: { [name: string]: SortFilter } = { "Last updated": "updated", Name: 
 
 const Repositories = () => {
   const [page, setPage] = useState<number>(1);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const { repos, totalRepoCount, loading } = useAppSelector((state) => state.githubApi);
   const dispatch = useAppDispatch();
 
@@ -69,6 +71,12 @@ const Repositories = () => {
     navigate("/repositories?" + urlParams);
   };
 
+  const deleteSelectedTopic = (index: number) => {
+    const result = [...selectedTopics];
+    result.splice(index, 1);
+    setSelectedTopics(result);
+  };
+
   const onRadioClick = (params: keyof RadioFilter, val: string) => {
     setPage(() => 1);
     urlParams.delete("page");
@@ -93,12 +101,13 @@ const Repositories = () => {
         q: urlParams.get("q"),
         language: urlParams.get("language"),
         sort: urlParams.get("sort"),
+        topics: selectedTopics,
         per_page: PER_PAGE,
         total_page: 4,
         page: parseInt(urlParams.get("page") || "1"),
       }),
     );
-  }, [location.search]);
+  }, [location.search, selectedTopics]);
 
   return (
     <PageSection>
@@ -135,14 +144,31 @@ const Repositories = () => {
                 </div>
               </div>
             )}
+            {selectedTopics.length > 0 && (
+              <div className="flex gap-1 flex-wrap mt-2">
+                {selectedTopics.map((topic, index) => (
+                  <Tag
+                    key={`selected_${topic}`}
+                    className="flex items-center gap-1"
+                    onClick={() => deleteSelectedTopic(index)}
+                  >
+                    {topic}
+                    <VscClose />
+                  </Tag>
+                ))}
+              </div>
+            )}
             {totalRepoCount === 0 ? (
               <div className="flex justify-center items-center min-h-[50vh] text-2xl font-bold">
                 This organization doesn’t have any repositories that match.
               </div>
             ) : (
-              TOTAL_PAGE < 2 || (
-                <>
-                  <ListWrapper datas={repos} />
+              <>
+                <ListWrapper
+                  datas={repos}
+                  topicClickFunction={(topic: string) => setSelectedTopics([...selectedTopics, topic])}
+                />
+                {TOTAL_PAGE < 2 || (
                   <div className="flex justify-center items-center gap-1 m-4">
                     <PaginationButton
                       className={`${page === 1 ? "text-gray-500 cursor-default hover:border-0" : ""}`}
@@ -168,14 +194,14 @@ const Repositories = () => {
                     )}
                     <PaginationButton
                       className={`${page === TOTAL_PAGE ? "text-gray-500 cursor-default hover:border-0" : ""}`}
-                      onClick={page === TOTAL_PAGE || (() => onPageButtonClick(page + 1))}
+                      onClick={() => page === TOTAL_PAGE || onPageButtonClick(page + 1)}
                     >
                       <p className="mr-2">Next</p>
                       <VscChevronRight />
                     </PaginationButton>
                   </div>
-                </>
-              )
+                )}
+              </>
             )}
           </>
         )}

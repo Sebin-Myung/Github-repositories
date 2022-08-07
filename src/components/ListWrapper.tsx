@@ -2,7 +2,7 @@ import languageColor from "../config/languageColor";
 import { GithubApi } from "../store/slices/fetchGithubApiSlice";
 import ListItem from "./ListItem";
 
-const ListWrapper = ({ datas }: { datas: GithubApi[] }) => {
+const ListWrapper = ({ datas, topicClickFunction }: { datas: GithubApi[]; topicClickFunction: Function }) => {
   return (
     <ul className="list-wrapper mt-5 border rounded-lg">
       {datas?.map((data) => (
@@ -17,6 +17,7 @@ const ListWrapper = ({ datas }: { datas: GithubApi[] }) => {
             stargazers_count: data.stargazers_count,
             updated_at: data.updated_at,
           }}
+          topicClickFunction={topicClickFunction}
         />
       ))}
     </ul>
