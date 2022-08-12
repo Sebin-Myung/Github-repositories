@@ -3,7 +3,7 @@ import { ImagePage, ImagePageSection } from "../components/baseComponents";
 
 const Main = () => {
   useEffect(() => {
-    document.title = "Githyb - Meta";
+    document.title = "Github - Meta";
   }, []);
 
   return (

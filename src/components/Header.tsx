@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <HeaderWrapper>
-      <PageWrapper className="pt-4 pb-0">
+      <PageWrapper className="pt-4 pb-0 xs:pt-5 xs:pb-0">
         <div className="flex items-center w-fit">
           <Link to="/">
             <img
